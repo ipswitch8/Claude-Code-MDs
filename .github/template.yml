@@ -1,0 +1,70 @@
+name: Development Documentation Template
+description: A comprehensive collection of development documentation and guidelines for various technologies and best practices.
+title_label: Project Name
+body:
+  - type: markdown
+    value: |
+      ## About This Template
+
+      This template provides comprehensive documentation and guidelines for:
+      - Web Development (ASP.NET Core, React/Node.js, PHP, Python/Django, Ruby)
+      - Databases (PostgreSQL, general database operations)
+      - Server Administration (Apache, IIS, Nginx)
+      - Programming Languages (Go, Bash scripting, AutoIt)
+      - Security Guidelines
+      - Universal Development Patterns
+
+      Perfect for teams looking to establish consistent development practices and documentation standards.
+
+  - type: input
+    id: project_name
+    attributes:
+      label: Project Name
+      description: What is the name of your project?
+      placeholder: "My Awesome Project"
+    validations:
+      required: true
+
+  - type: textarea
+    id: project_description
+    attributes:
+      label: Project Description
+      description: Brief description of your project
+      placeholder: "A brief description of what this project does..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: technologies
+    attributes:
+      label: Technologies
+      description: Which technologies will you be using? (Check all that apply)
+      options:
+        - label: ASP.NET Core
+        - label: React/Node.js
+        - label: PHP
+        - label: Python/Django
+        - label: Ruby
+        - label: Go
+        - label: PostgreSQL
+        - label: Apache
+        - label: IIS
+        - label: Nginx
+        - label: Bash Scripting
+        - label: AutoIt
+
+  - type: dropdown
+    id: primary_language
+    attributes:
+      label: Primary Programming Language
+      description: What is the primary programming language for this project?
+      options:
+        - C#/.NET
+        - JavaScript/TypeScript
+        - PHP
+        - Python
+        - Ruby
+        - Go
+        - Other
+    validations:
+      required: true

@@ -1,0 +1,140 @@
+# Security Repository .gitignore
+# This file prevents sensitive data from being committed to this security templates repository
+
+# Actual sensitive files (these patterns are templates, not the real files)
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+.env*
+credentials*
+secrets*
+*.keystore
+*.jks
+id_rsa
+id_dsa
+*.ppk
+
+# Temporary files
+*.swp
+*.tmp
+*~
+.DS_Store
+*.orig
+*.rej
+Thumbs.db
+
+# Log files
+*.log
+security-audit.log
+audit-*.log
+
+# Database files
+*.db
+*.sqlite*
+*.sql
+
+# Backup files
+backup*
+dump*
+*.backup
+*.bak
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Dependency directories
+node_modules/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.coverage
+*.egg-info/
+vendor/
+target/
+.gradle/
+build/
+dist/
+
+# Configuration files that might contain secrets
+config.php
+settings.py
+application.properties
+*.conf
+*.config
+.env.local
+.env.production
+
+# Test and development artifacts
+coverage/
+.nyc_output/
+test-results/
+screenshots/
+.sass-cache/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Documentation build artifacts
+_site/
+.jekyll-cache/
+.bundle/
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon
+
+# Windows
+*.lnk
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Keep this file and templates
+!README.md
+!security-audit.sh
+!.claude-security.json
+!CLAUDE.md
+!setup.sh
+!global-security.sh
+!.gitignore
+
+# Example/test directories that might contain mock sensitive data
+examples/
+tests/fixtures/
+test-data/
+mock-data/

@@ -1,0 +1,147 @@
+{
+  "project_name": "template_project",
+  "security_config": {
+    "version": "1.0",
+    "scan_depth": 3,
+    "auto_fix_enabled": true,
+    "alert_on_critical": true,
+    "log_all_scans": true,
+    "block_on_critical": true
+  },
+  "ignore_paths": [
+    "node_modules",
+    ".venv",
+    "__pycache__",
+    "dist",
+    "build",
+    "coverage",
+    ".nyc_output",
+    "vendor",
+    "target",
+    ".gradle"
+  ],
+  "sensitive_file_patterns": [
+    "*.key",
+    "*.pem", 
+    "*.p12",
+    "*.pfx",
+    "*.crt",
+    "*.cer",
+    ".env*",
+    "config.php",
+    "settings.py",
+    "*.sql",
+    "*.db",
+    "*.sqlite*",
+    "backup*",
+    "dump*",
+    "credentials*",
+    "secrets*",
+    "*.keystore",
+    "*.jks",
+    "id_rsa",
+    "id_dsa",
+    "*.ppk"
+  ],
+  "custom_security_rules": [
+    {
+      "name": "hardcoded_password",
+      "pattern": "password\\s*[=:]\\s*['\"][^'\"]{1,}['\"]",
+      "severity": "critical",
+      "message": "Hardcoded password detected",
+      "auto_fix": false
+    },
+    {
+      "name": "api_key",
+      "pattern": "api[_-]?key\\s*[=:]\\s*['\"][^'\"]{8,}['\"]", 
+      "severity": "critical",
+      "message": "Hardcoded API key detected",
+      "auto_fix": false
+    },
+    {
+      "name": "secret_token",
+      "pattern": "(secret|token)\\s*[=:]\\s*['\"][^'\"]{16,}['\"]",
+      "severity": "critical", 
+      "message": "Hardcoded secret/token detected",
+      "auto_fix": false
+    },
+    {
+      "name": "dangerous_eval",
+      "pattern": "eval\\s*\\(",
+      "severity": "high",
+      "message": "Dangerous eval() usage detected",
+      "auto_fix": false
+    },
+    {
+      "name": "innerHTML_xss",
+      "pattern": "innerHTML\\s*=",
+      "severity": "medium", 
+      "message": "Potential XSS via innerHTML",
+      "auto_fix": false
+    },
+    {
+      "name": "document_write",
+      "pattern": "document\\.write\\s*\\(",
+      "severity": "high",
+      "message": "Dangerous document.write() usage",
+      "auto_fix": false
+    },
+    {
+      "name": "sql_injection",
+      "pattern": "SELECT.*\\+.*FROM",
+      "severity": "high",
+      "message": "Potential SQL injection vulnerability",
+      "auto_fix": false
+    }
+  ],
+  "required_permissions": {
+    ".git": "700",
+    ".git/config": "600",
+    ".git/HEAD": "600", 
+    ".git/index": "600",
+    "*.sh": "755",
+    "*.key": "600",
+    "*.pem": "600",
+    "*.crt": "600",
+    ".env*": "600"
+  },
+  "web_security_checks": {
+    "check_csp_headers": true,
+    "check_file_upload_validation": true,
+    "check_external_resources": true,
+    "check_inline_scripts": false,
+    "check_https_usage": true,
+    "check_cookie_security": true
+  },
+  "git_security_checks": {
+    "check_credentials_in_urls": true,
+    "check_large_files": true,
+    "max_file_size_mb": 10,
+    "check_gitignore_exists": true,
+    "check_sensitive_files_ignored": true
+  },
+  "dependency_security_checks": {
+    "check_npm_vulnerabilities": true,
+    "check_python_vulnerabilities": true,
+    "check_outdated_dependencies": true,
+    "auto_update_dependencies": false
+  },
+  "reporting": {
+    "log_file": "security-audit.log",
+    "json_report": false,
+    "email_alerts": false,
+    "webhook_notifications": false
+  },
+  "auto_fix_rules": {
+    "fix_git_permissions": true,
+    "remove_temp_files": true,
+    "remove_ds_store": true,
+    "secure_sensitive_files": true
+  },
+  "compliance_frameworks": [
+    "OWASP",
+    "CWE",
+    "PCI-DSS",
+    "GDPR"
+  ]
+}
