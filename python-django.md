@@ -464,7 +464,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key-here')
+SECRET_KEY = os.environ.get('SECRET_KEY') or (
+    lambda: exec('raise ValueError("SECRET_KEY environment variable is required")')
+)()  # Force requirement of environment variable
 
 DEBUG = False
 
@@ -644,12 +646,12 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 ```bash
 # .env
 DEBUG=True
-SECRET_KEY=your-super-secret-key-here
-DB_NAME=myproject
-DB_USER=myuser
-DB_PASSWORD=mypassword
-DB_HOST=localhost
-DB_PORT=5432
+SECRET_KEY=${DJANGO_SECRET_KEY}
+DB_NAME=${DATABASE_NAME}
+DB_USER=${DATABASE_USER}
+DB_PASSWORD=${DATABASE_PASSWORD}
+DB_HOST=${DATABASE_HOST}
+DB_PORT=${DATABASE_PORT}
 ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 

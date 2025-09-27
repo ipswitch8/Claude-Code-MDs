@@ -207,6 +207,19 @@ class DriverFactory:
                 options.add_argument("--headless")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--disable-infobars")
+            options.add_argument("--disable-popup-blocking")
+            options.add_argument("--disable-notifications")
+
+            # Set clipboard and popup preferences
+            prefs = {
+                "profile.content_settings.exceptions.clipboard": {
+                    "*": {"setting": 1}
+                },
+                "profile.default_content_settings.popups": 0
+            }
+            options.add_experimental_option("prefs", prefs)
+
             return webdriver.Chrome(options=options)
 
         elif browser.lower() == "firefox":
@@ -233,6 +246,18 @@ class DriverFactory:
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-gpu")
             options.add_argument("--window-size=1920,1080")
+            options.add_argument("--disable-infobars")
+            options.add_argument("--disable-popup-blocking")
+            options.add_argument("--disable-notifications")
+
+            # Set clipboard and popup preferences
+            prefs = {
+                "profile.content_settings.exceptions.clipboard": {
+                    "*": {"setting": 1}
+                },
+                "profile.default_content_settings.popups": 0
+            }
+            options.add_experimental_option("prefs", prefs)
         elif browser.lower() == "firefox":
             options = FirefoxOptions()
             options.add_argument("--width=1920")

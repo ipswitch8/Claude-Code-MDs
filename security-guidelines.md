@@ -190,10 +190,27 @@ public class UserRegistrationModel
 ### **Environment Variables**
 ```bash
 # .env (NEVER commit this file)
-DATABASE_CONNECTION=Server=localhost;Database=MyApp;User Id=appuser;Password=SecureP@ssw0rd;
-JWT_SECRET=your-256-bit-secret-key-here
-SMTP_PASSWORD=email-service-password
-API_KEY=external-service-api-key
+# Use strong, randomly generated values in production
+DATABASE_CONNECTION=${DATABASE_CONNECTION}
+JWT_SECRET=${JWT_SECRET}
+SMTP_PASSWORD=${SMTP_PASSWORD}
+API_KEY=${API_KEY}
+```
+
+### **Environment Variable Security Best Practices**
+```bash
+# Generate secure random values for secrets
+# Example commands for generating secure values:
+# JWT_SECRET: openssl rand -base64 64
+# API keys: openssl rand -hex 32
+# Passwords: openssl rand -base64 32
+
+# Example secure .env template
+DATABASE_CONNECTION="Server=${DB_HOST};Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};"
+JWT_SECRET="$(openssl rand -base64 64)"
+SMTP_PASSWORD="${SMTP_SERVICE_PASSWORD}"
+API_KEY="${EXTERNAL_API_KEY}"
+ENCRYPTION_KEY="$(openssl rand -base64 44)"
 ```
 
 ```csharp

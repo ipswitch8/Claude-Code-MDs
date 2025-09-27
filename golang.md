@@ -761,7 +761,12 @@ type UserHandlerTestSuite struct {
 
 func (suite *UserHandlerTestSuite) SetupSuite() {
     // Setup test database
-    db, err := sql.Open("postgres", "postgres://user:password@localhost/testdb?sslmode=disable")
+    // Use environment variables even in tests for security
+    dbURL := os.Getenv("TEST_DATABASE_URL")
+    if dbURL == "" {
+        dbURL = "postgres://testuser:testpass@localhost/testdb?sslmode=disable" // fallback for local dev
+    }
+    db, err := sql.Open("postgres", dbURL)
     suite.Require().NoError(err)
     suite.db = db
 

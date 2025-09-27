@@ -46,7 +46,7 @@ postgres-project/
 ```bash
 # Connect to PostgreSQL
 psql -h localhost -U username -d database_name
-psql postgresql://username:password@localhost:5432/database_name
+psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
 # Database operations
 createdb myapp_development
@@ -540,9 +540,10 @@ GRANT app_readwrite TO app_admin;
 GRANT CREATE ON SCHEMA public TO app_admin;
 
 -- Create application users
-CREATE USER app_read_user WITH PASSWORD 'secure_password_1';
-CREATE USER app_write_user WITH PASSWORD 'secure_password_2';
-CREATE USER app_admin_user WITH PASSWORD 'secure_password_3';
+-- SECURITY: Use environment variables for passwords, never hardcode
+CREATE USER app_read_user WITH PASSWORD :'DB_READ_PASSWORD';
+CREATE USER app_write_user WITH PASSWORD :'DB_WRITE_PASSWORD';
+CREATE USER app_admin_user WITH PASSWORD :'DB_ADMIN_PASSWORD';
 
 -- Assign roles
 GRANT app_readonly TO app_read_user;
@@ -746,7 +747,7 @@ For detailed guidance, see: postgresql.md
 
 # Database Information
 - PostgreSQL Version: 14+ recommended
-- Connection: postgresql://user:pass@host:5432/dbname
+- Connection: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 - Extensions: pgcrypto, uuid-ossp, pg_stat_statements
 
 # Additional References

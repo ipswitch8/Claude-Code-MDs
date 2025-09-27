@@ -192,7 +192,8 @@ WITH MOVE 'MyDatabase' TO 'C:\TestDatabase\MyDatabase_Test.mdf',
 ### **User Management**
 ```sql
 -- Create application user with minimal permissions
-CREATE LOGIN [AppUser] WITH PASSWORD = 'SecurePassword123!';
+-- SECURITY: Use environment variables for passwords, never hardcode
+CREATE LOGIN [AppUser] WITH PASSWORD = '$(DB_APP_USER_PASSWORD)';
 CREATE USER [AppUser] FOR LOGIN [AppUser];
 
 -- Grant specific permissions only

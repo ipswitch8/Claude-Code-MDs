@@ -253,7 +253,7 @@ catch
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MyApp;Trusted_Connection=true;",
-    "Production": "Server=prod-server;Database=MyApp;User Id=user;Password=***;"
+    "Production": "Server=${DB_HOST};Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};"
   }
 }
 ```

@@ -591,7 +591,7 @@ class UserControllerTest extends TestCase
     {
         $_POST = [
             'email' => 'newuser@example.com',
-            'password' => 'SecureP@ssw0rd123',
+            'password' => 'TestPassword123!', // Test data only - never hardcode real passwords
             'first_name' => 'John',
             'last_name' => 'Doe'
         ];
