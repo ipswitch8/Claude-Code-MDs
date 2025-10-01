@@ -15,7 +15,10 @@
       "Bash(git rm:*)",
       "Bash(git filter-branch:*)",
       "Bash(git log:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Read(//c/Users/mhasse/source/repos/Core2019/Core2020/**)"
     ],
     "deny": [],
     "ask": []

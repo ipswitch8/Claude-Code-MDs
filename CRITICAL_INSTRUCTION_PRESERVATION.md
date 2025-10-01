@@ -21,16 +21,22 @@
 - If any authentication step fails → STOP and fix before proceeding
 - No "infrastructure works but login failed" exceptions
 
-### **3. ❌ MANDATORY 7-STEP PROTOCOL:**
+### **3. ❌ MANDATORY 8-STEP PROTOCOL:**
 ```
-0. Read CLAUDE.md + TESTING_PROTOCOL.md (instruction refresh)
-1. Kill all dotnet processes: taskkill /IM dotnet.exe /F
-2. Build: dotnet build (must show 0 errors)
-3. Restart: dotnet run (must show "Listening on")
-4. Test: Selenium clicks actual UI elements
-5. Verify: HTTP 200 responses + database changes
-6. Document: Evidence with timestamps
+0. Run security audit - Execute security checks with 0 critical issues
+1. Refresh critical instructions - Read CLAUDE.md, pre-testing-checklist.md
+2. Stop running application - Show process kill command
+3. Build application - Show build output with 0 errors
+4. Restart application - Show startup logs with confirmation
+5. Test core functionality - Selenium clicks actual UI elements
+6. Verify results - HTTP 200 responses + database changes
+7. Document evidence - Create timestamped report using testing-evidence-template.md
 ```
+
+**📋 Use these supporting files:**
+- `pre-testing-checklist.md` - Verify environment BEFORE step 0
+- `testing-evidence-template.md` - Document results in step 7
+- `universal-patterns.md` - Complete protocol details
 
 ### **4. ❌ UNACCEPTABLE STATEMENTS:**
 - "Infrastructure tests pass, ready for manual testing"
@@ -67,36 +73,89 @@ SELECT * FROM [relevant_table] WHERE [condition];
 
 ---
 
-## **WHEN TO RE-READ THESE INSTRUCTIONS:**
+## **INSTRUCTION DEGRADATION PREVENTION**
 
-- [ ] **Start of every testing sequence**
-- [ ] **Before marking any task "complete"**
-- [ ] **After context compaction/conversation continuation**
-- [ ] **When authentication or testing fails**
-- [ ] **When tempted to skip verification steps**
+### **What is Instruction Degradation?**
+During long sessions or after context compaction, AI systems can "forget" critical rules and requirements, leading to:
+- Skipped testing steps
+- Shortcuts that bypass important checks
+- Missing evidence requirements
+- Authentication bypasses
+- Incomplete verification
 
----
+### **Prevention Strategies:**
 
-## **WARNING SIGNS OF INSTRUCTION LOSS:**
+**1. Proactive Instruction Refresh (Step 0 of all protocols):**
+- Always start testing sequences by re-reading critical instructions
+- Use `pre-testing-checklist.md` to verify all prerequisites
+- Review project-specific CLAUDE.md files
+- Check framework-specific documentation
 
-If you find yourself thinking:
-- "Infrastructure tests pass, ready for manual testing"
-- "Authentication failed but system is implemented"
-- "Code looks correct, should work"
-- "Implementation complete" (without evidence)
+**2. Layered Instruction Architecture:**
+```
+Layer 1: CRITICAL_INSTRUCTION_PRESERVATION.md (this file) - Critical rules only
+Layer 2: universal-patterns.md - Universal testing protocol
+Layer 3: Project CLAUDE.md - Project-specific overrides
+Layer 4: Framework docs - Framework-specific guidance
+```
 
-**IMMEDIATELY RE-READ THESE CRITICAL INSTRUCTIONS**
+**3. Warning Sign Monitoring:**
+If you notice these thoughts/patterns, instruction degradation is occurring:
+- Considering shortcuts or workarounds
+- Thinking "probably works" without verification
+- Wanting to skip authentication in tests
+- Marking tasks complete without evidence
+- Rationalizing why a step isn't needed
+
+**4. Mandatory Checkpoints:**
+At these points, MUST re-read critical instructions:
+- [ ] Start of every testing sequence
+- [ ] Before marking any task "complete"
+- [ ] After context compaction/conversation continuation
+- [ ] When authentication or testing fails
+- [ ] When tempted to skip verification steps
+- [ ] After extended periods of coding without testing
+- [ ] When user questions test completeness
+
+### **Context Loss Detection:**
+
+**Early Warning Signs:**
+- ⚠️ Thinking "Infrastructure tests pass, ready for manual testing"
+- ⚠️ Saying "Authentication failed but system is implemented"
+- ⚠️ Claiming "Code looks correct, should work"
+- ⚠️ Stating "Implementation complete" without evidence
+- ⚠️ Suggesting to bypass authentication "just for testing"
+- ⚠️ Not verifying database changes
+- ⚠️ Skipping evidence documentation
+
+**Immediate Actions When Detected:**
+1. **STOP** all current work immediately
+2. **RE-READ** this file completely
+3. **REVIEW** all referenced instruction files
+4. **VERIFY** understanding of critical rules
+5. **RESTART** work from last verified checkpoint
+6. **RE-TEST** with full protocol compliance
 
 ---
 
 ## **MANDATORY READ SEQUENCE FOR ANY TESTING:**
 
-1. **CRITICAL_INSTRUCTIONS.md** (context refresh)
-2. **CLAUDE.md lines 63-100** (original protocol)
-3. **TESTING_PROTOCOL.md** (detailed steps)
-4. **BEFORE_TESTING_CHECKLIST.md** (prerequisites)
-5. Execute tests following protocol
-6. **TEST_EVIDENCE_TEMPLATE.md** (document results)
+**BEFORE starting any test:**
+1. **pre-testing-checklist.md** - Environment prerequisites
+2. **CRITICAL_INSTRUCTION_PRESERVATION.md** (this file) - Core rules
+3. **universal-patterns.md** - 8-step testing protocol
+4. **Project CLAUDE.md** - Project-specific requirements
+5. **Framework documentation** - Framework-specific steps
+
+**DURING testing:**
+- Follow 8-step protocol strictly
+- Mark each step complete with evidence
+- No skipping, no shortcuts
+
+**AFTER testing:**
+6. **testing-evidence-template.md** - Document all results
+7. **Review checklist** - Verify all criteria met
+8. **Mark complete** - Only if ALL evidence collected
 
 ---
 
@@ -139,12 +198,42 @@ If you find yourself thinking:
 ---
 
 ## **FILE REFERENCES FOR PRESERVATION:**
-- **CLAUDE.md** - Lines 63-100 (Testing Protocol)
-- **TESTING_PROTOCOL.md** - Complete 7-step requirements
-- **BEFORE_TESTING_CHECKLIST.md** - Pre-test verification
-- **CRITICAL_INSTRUCTIONS.md** - Context-loss prevention rules
+
+### **Core Instruction Files (Always Read):**
+- **CRITICAL_INSTRUCTION_PRESERVATION.md** (this file) - Critical rules and degradation prevention
+- **universal-patterns.md** - 8-step testing protocol and universal patterns
+- **pre-testing-checklist.md** - Environment prerequisites before testing
+- **testing-evidence-template.md** - Evidence documentation template
+
+### **Project-Specific Files (Read When Present):**
+- **Project CLAUDE.md** - Project-specific requirements and overrides
+- **Project-specific testing protocols** - Custom requirements
+
+### **Framework-Specific Files (Read For Your Stack):**
+- **react-nodejs.md**, **python-django.md**, **golang.md**, **php.md**, etc.
+- **selenium-e2e-testing.md** - E2E testing requirements
+- **database-operations.md** - Database migration and testing
+
+### **Security Files (Always Consider):**
+- **mandatory-security-protocols.md** - Security requirements
+- **security-guidelines.md** - Consolidated security guidance
 
 **READ THESE FILES BEFORE EVERY TEST TO PREVENT INSTRUCTION LOSS**
+
+### **Quick Reference Card:**
+```
+┌─────────────────────────────────────────────────────┐
+│ INSTRUCTION REFRESH PROTOCOL                        │
+├─────────────────────────────────────────────────────┤
+│ 1. pre-testing-checklist.md → Environment ready?   │
+│ 2. This file → Critical rules remembered?          │
+│ 3. universal-patterns.md → Protocol steps clear?   │
+│ 4. Project CLAUDE.md → Specific requirements?      │
+│ 5. Framework docs → Stack-specific needs?          │
+├─────────────────────────────────────────────────────┤
+│ IF ANY "PROBABLY" OR "SHOULD WORK" → RE-READ ALL  │
+└─────────────────────────────────────────────────────┘
+```
 
 ---
 
