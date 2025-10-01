@@ -47,25 +47,41 @@
 
 ## 📋 Migration Best Practices
 
+### **Migration Philosophy**
+**PREFER additive changes; destructive changes require multi-phase deployment**
+
+- **Additive changes** = Add columns, add indexes, add constraints (SAFE, do immediately)
+- **Destructive changes** = Drop columns, rename columns, drop tables (DANGEROUS, multi-phase only)
+
 ### **Schema Migrations**
 ```sql
--- GOOD: Additive changes
+-- GOOD: Additive changes (safe to deploy immediately)
 ALTER TABLE Users ADD COLUMN IsEmailVerified BIT DEFAULT 0;
 ALTER TABLE Orders ADD COLUMN ShippingTaxAmount DECIMAL(10,2) DEFAULT 0.00;
 
--- RISKY: Destructive changes (require careful planning)
--- ALTER TABLE Users DROP COLUMN OldField;
--- ALTER TABLE Users RENAME COLUMN OldName TO NewName;
+-- DESTRUCTIVE: Changes that remove/rename (require explicit approval)
+-- NEVER automatically drop or rename columns
+-- ALTER TABLE Users DROP COLUMN OldField;  -- NEVER do this without explicit user request
+-- ALTER TABLE Users RENAME COLUMN OldName TO NewName;  -- NEVER do this without explicit user request
 
--- SAFE APPROACH: Multi-step deployment
--- Step 1: Add new column
+-- SAFE APPROACH: Multi-phase additive deployment
+-- Prefer this approach - keeps old columns until explicitly requested to remove
+
+-- Phase 1: Add new column (separate deployment)
 ALTER TABLE Users ADD COLUMN NewField VARCHAR(100);
 
--- Step 2: Populate new column (separate deployment)
+-- Phase 2: Populate new column with transformed data (separate deployment)
 UPDATE Users SET NewField = TRANSFORM(OldField);
 
--- Step 3: Remove old column (after verifying new column works)
--- ALTER TABLE Users DROP COLUMN OldField;
+-- Phase 3: Update application code to use NewField (separate deployment)
+-- Deploy code changes
+
+-- Phase 4: Verify new column works correctly (manual verification)
+-- Manually test in production for at least one full release cycle
+
+-- Phase 5: ONLY remove old column when explicitly requested and 100% verified safe
+-- This step requires explicit user approval - NEVER do automatically
+-- ALTER TABLE Users DROP COLUMN OldField;  -- Only after explicit user request
 ```
 
 ### **Data Migrations**
@@ -193,6 +209,8 @@ WITH MOVE 'MyDatabase' TO 'C:\TestDatabase\MyDatabase_Test.mdf',
 ```sql
 -- Create application user with minimal permissions
 -- SECURITY: Use environment variables for passwords, never hardcode
+-- Generate password with: openssl rand -base64 32
+-- Store in .env as: DB_APP_USER_PASSWORD=<generated_password>
 CREATE LOGIN [AppUser] WITH PASSWORD = '$(DB_APP_USER_PASSWORD)';
 CREATE USER [AppUser] FOR LOGIN [AppUser];
 
@@ -375,25 +393,4 @@ public class AppDbContext : DbContext
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your project's CLAUDE.md:
-
-```markdown
-# 📚 Database Operations Documentation
-This project follows database best practices.
-For detailed guidance, see: database-operations.md
-
-# Database Information
-- Database Type: SQL Server | PostgreSQL | MySQL | SQLite
-- ORM: Entity Framework Core | Dapper | Raw SQL
-- Migration Strategy: Code First | Database First
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers database operations across all platforms and should be used alongside framework-specific guidance.*
+*This document covers database operations across all platforms and should be used alongside framework-specific guidance. For security best practices, see security-guidelines.md.*

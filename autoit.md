@@ -581,3 +581,5 @@ EndFunc
 - Implement proper memory management for large datasets
 
 This guide ensures robust, maintainable AutoIT scripts that integrate well with larger automation workflows while following security and performance best practices.
+
+*This document covers AutoIt scripting best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

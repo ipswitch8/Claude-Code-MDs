@@ -1,10 +1,18 @@
-# Mandatory Security Protocols for Claude Code
+# Mandatory Security Protocols
 
-*🚨 CRITICAL: Every Claude Code session MUST run comprehensive security checks before any code changes.*
+*🚨 CRITICAL: Every Claude session MUST run comprehensive security checks before any code changes.*
 
 ## ⚠️ MANDATORY SECURITY REQUIREMENTS
 
-**These protocols apply to ALL systems, ALL projects, ALL sessions - NO EXCEPTIONS.**
+**These protocols apply to ALL Claude interactions including:**
+- 🖥️ **Claude Code CLI** (command-line interface)
+- 🤖 **Claude Code Agents** (all agent types: general-purpose, statusline-setup, output-style-setup, etc.)
+- 🔌 **Claude MCP Servers** (Model Context Protocol integrations)
+- 💻 **Claude Desktop App** (standalone application)
+- 🌐 **Claude.ai** (web interface)
+- 🛠️ **Any other Claude-powered tools** (extensions, plugins, custom integrations)
+
+**These protocols are mandatory across ALL systems, ALL projects, ALL sessions - NO EXCEPTIONS.**
 
 ### 1. Pre-Session Security Audit
 ```bash

@@ -564,3 +564,5 @@ echo "Restore completed"
 ```
 
 This guide provides comprehensive Apache administration with security-first principles, performance optimization, and robust monitoring capabilities for production environments.
+
+*This document covers Apache administration best practices and should be used alongside universal patterns. For consolidated security guidance, see security-guidelines.md.*

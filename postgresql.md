@@ -138,13 +138,14 @@ LIMIT 10;
 - View and function modifications
 
 ### **Testing Protocol Additions**
-After the universal 7-step protocol, add:
+After the universal 7-step protocol, add these PostgreSQL-specific checks:
 
-7. **[ ] Check PostgreSQL service status** - Verify database is running
-8. **[ ] Test database connections** - Confirm applications can connect
-9. **[ ] Verify schema integrity** - Check tables, indexes, and constraints
-10. **[ ] Run migration status check** - Ensure all migrations are applied
-11. **[ ] Test query performance** - Verify no performance degradation
+8. **[ ] Check PostgreSQL service status** - Verify database is running
+9. **[ ] Test database connections** - Confirm applications can connect
+10. **[ ] Verify schema integrity** - Check tables, indexes, and constraints
+11. **[ ] Run migration status check** - Ensure all migrations are applied
+12. **[ ] Test query performance** - Verify no performance degradation
+13. **[ ] Validate connection pooling** - Ensure connection limits are not exceeded
 
 ## 🏗️ Schema Design Best Practices
 
@@ -711,10 +712,11 @@ COMMIT;
 ```sql
 -- test_data.sql
 -- Create test users
+-- SECURITY: Use environment variables for passwords in production
 INSERT INTO users (email, password_hash, first_name, last_name) VALUES
-    ('test1@example.com', crypt('password123', gen_salt('bf')), 'Test', 'User1'),
-    ('test2@example.com', crypt('password123', gen_salt('bf')), 'Test', 'User2'),
-    ('admin@example.com', crypt('admin123', gen_salt('bf')), 'Admin', 'User');
+    ('test1@example.com', crypt(:'TEST_USER_PASSWORD', gen_salt('bf')), 'Test', 'User1'),
+    ('test2@example.com', crypt(:'TEST_USER_PASSWORD', gen_salt('bf')), 'Test', 'User2'),
+    ('admin@example.com', crypt(:'TEST_ADMIN_PASSWORD', gen_salt('bf')), 'Admin', 'User');
 
 -- Create test orders
 INSERT INTO orders (user_id, order_number, total_amount, status)
@@ -736,26 +738,4 @@ FROM users;
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your project's CLAUDE.md:
-
-```markdown
-# 📚 PostgreSQL Documentation
-This project follows PostgreSQL best practices.
-For detailed guidance, see: postgresql.md
-
-# Database Information
-- PostgreSQL Version: 14+ recommended
-- Connection: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
-- Extensions: pgcrypto, uuid-ossp, pg_stat_statements
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers PostgreSQL-specific patterns and should be used alongside universal database operation guidelines.*
+*This document covers PostgreSQL best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

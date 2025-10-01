@@ -702,3 +702,5 @@ foreach ($Site in $Sites) {
 ```
 
 This comprehensive IIS administration guide provides Windows-specific security hardening, performance optimization, monitoring, and enterprise-grade management capabilities for production environments.
+
+*This document covers IIS administration best practices and should be used alongside universal patterns. For consolidated security guidance, see security-guidelines.md.*

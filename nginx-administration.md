@@ -713,3 +713,5 @@ echo "Maintenance completed: $(date)"
 ```
 
 This comprehensive Nginx administration guide provides security-first configuration, performance optimization, monitoring, and disaster recovery capabilities for production environments.
+
+*This document covers Nginx administration best practices and should be used alongside universal patterns. For consolidated security guidance, see security-guidelines.md.*

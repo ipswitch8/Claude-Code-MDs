@@ -163,14 +163,13 @@ php bin/console debug:container
 - Template/view modifications
 - Route changes (in some frameworks)
 
-### **Testing Protocol Additions**
-After the universal 7-step protocol, add:
+### **After the universal 7-step protocol, add these framework-specific steps:**
 
-7. **[ ] Check PHP error logs** - Verify no fatal errors or warnings
-8. **[ ] Test autoloader** - Ensure all classes load correctly
-9. **[ ] Verify database connections** - Test DB connectivity and migrations
-10. **[ ] Check framework cache** - Clear and regenerate caches if needed
-11. **[ ] Validate routes** - Ensure all routes respond correctly
+8. **[ ] Check PHP error logs** - Verify no fatal errors or warnings
+9. **[ ] Test autoloader** - Ensure all classes load correctly
+10. **[ ] Verify database connections** - Test DB connectivity and migrations
+11. **[ ] Check framework cache** - Clear and regenerate caches if needed
+12. **[ ] Validate routes** - Ensure all routes respond correctly
 
 ## 🛡️ Security Best Practices
 
@@ -522,7 +521,7 @@ class UserTest extends TestCase
     {
         $user = new User([
             'email' => 'test@example.com',
-            'password_hash' => password_hash('password123', PASSWORD_DEFAULT)
+            'password_hash' => password_hash($_ENV['TEST_PASSWORD'] ?? 'password123', PASSWORD_DEFAULT)
         ]);
 
         $result = $this->userRepository->create($user);
@@ -591,7 +590,7 @@ class UserControllerTest extends TestCase
     {
         $_POST = [
             'email' => 'newuser@example.com',
-            'password' => 'TestPassword123!', // Test data only - never hardcode real passwords
+            'password' => $_ENV['TEST_PASSWORD'] ?? 'TestPassword123!',
             'first_name' => 'John',
             'last_name' => 'Doe'
         ];
@@ -912,26 +911,4 @@ class QueryBuilder
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your PHP project's CLAUDE.md:
-
-```markdown
-# 📚 PHP Documentation
-This project follows PHP best practices.
-For detailed guidance, see: php.md
-
-# Framework Information
-- PHP Version: ^8.1
-- Framework: Laravel | Symfony | Custom
-- Database: MySQL | PostgreSQL | SQLite
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers PHP development across frameworks and should be used alongside universal patterns.*
+*This document covers PHP development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

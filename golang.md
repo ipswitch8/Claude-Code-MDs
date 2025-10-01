@@ -175,13 +175,13 @@ go generate ./...
 - Port or network configuration updates
 
 ### **Testing Protocol Additions**
-After the universal 7-step protocol, add:
+After the universal 7-step protocol, add these framework-specific steps:
 
-7. **[ ] Run go fmt and goimports** - Ensure code formatting is correct
-8. **[ ] Run go vet** - Check for static analysis issues
-9. **[ ] Run tests with race detection** - Execute `go test -race ./...`
-10. **[ ] Check module dependencies** - Run `go mod tidy` and verify
-11. **[ ] Verify binary builds correctly** - Test cross-compilation if needed
+8. **[ ] Run go fmt and goimports** - Ensure code formatting is correct
+9. **[ ] Run go vet** - Check for static analysis issues
+10. **[ ] Run tests with race detection** - Execute `go test -race ./...`
+11. **[ ] Check module dependencies** - Run `go mod tidy` and verify
+12. **[ ] Verify binary builds correctly** - Test cross-compilation if needed
 
 ## 💻 Go Best Practices
 
@@ -764,7 +764,7 @@ func (suite *UserHandlerTestSuite) SetupSuite() {
     // Use environment variables even in tests for security
     dbURL := os.Getenv("TEST_DATABASE_URL")
     if dbURL == "" {
-        dbURL = "postgres://testuser:testpass@localhost/testdb?sslmode=disable" // fallback for local dev
+        dbURL = os.Getenv("TEST_DATABASE_URL") // fallback for local dev
     }
     db, err := sql.Open("postgres", dbURL)
     suite.Require().NoError(err)
@@ -1272,26 +1272,4 @@ help:
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your Go project's CLAUDE.md:
-
-```markdown
-# 📚 Go Documentation
-This project follows Go best practices.
-For detailed guidance, see: golang.md
-
-# Go Information
-- Go Version: 1.21+
-- Framework: Gin | Echo | Standard library
-- Database: PostgreSQL | MySQL | SQLite
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers Go development best practices and should be used alongside universal patterns.*
+*This document covers Go development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

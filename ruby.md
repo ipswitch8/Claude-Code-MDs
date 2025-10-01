@@ -180,14 +180,13 @@ rake app:deploy
 - Route changes
 - Most Ruby class changes in `app/` directory
 
-### **Testing Protocol Additions**
-After the universal 7-step protocol, add:
+### **After the universal 7-step protocol, add these framework-specific steps:**
 
-7. **[ ] Check Ruby syntax** - Run `ruby -c file.rb` for syntax validation
-8. **[ ] Run RuboCop** - Check code style with `bundle exec rubocop`
-9. **[ ] Verify database state** - Ensure migrations are current
-10. **[ ] Test gem dependencies** - Confirm all gems load correctly
-11. **[ ] Check Rails environment** - Verify correct environment configuration
+8. **[ ] Check Ruby syntax** - Run `ruby -c file.rb` for syntax validation
+9. **[ ] Run RuboCop** - Check code style with `bundle exec rubocop`
+10. **[ ] Verify database state** - Ensure migrations are current
+11. **[ ] Test gem dependencies** - Confirm all gems load correctly
+12. **[ ] Check Rails environment** - Verify correct environment configuration
 
 ## 💎 Ruby Best Practices
 
@@ -420,7 +419,7 @@ RSpec.describe User, type: :model do
     {
       name: 'John Doe',
       email: 'john@example.com',
-      password: 'securepassword123'
+      password: ENV.fetch('TEST_USER_PASSWORD', 'test_password')
     }
   end
 
@@ -490,7 +489,7 @@ RSpec.describe UsersController, type: :controller do
     {
       name: 'John Doe',
       email: 'john@example.com',
-      password: 'securepassword123'
+      password: ENV.fetch('TEST_USER_PASSWORD', 'test_password')
     }
   end
 
@@ -557,7 +556,7 @@ RSpec.describe UserRegistrationService do
     {
       name: 'John Doe',
       email: 'john@example.com',
-      password: 'securepassword123'
+      password: ENV.fetch('TEST_USER_PASSWORD', 'test_password')
     }
   end
 
@@ -867,26 +866,4 @@ end
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your Ruby project's CLAUDE.md:
-
-```markdown
-# 📚 Ruby Documentation
-This project follows Ruby best practices.
-For detailed guidance, see: ruby.md
-
-# Framework Information
-- Ruby Version: 3.2.0
-- Framework: Rails | Sinatra | Plain Ruby
-- Database: PostgreSQL | MySQL | SQLite
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers Ruby development across frameworks and should be used alongside universal patterns.*
+*This document covers Ruby development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

@@ -6,6 +6,27 @@
 
 **Every web application requires comprehensive E2E testing with Selenium to validate real user workflows and interface behavior.**
 
+### **Scope: ALL Browser-Based Interfaces**
+
+Selenium E2E testing is MANDATORY for:
+- ✅ Production user-facing websites and web applications
+- ✅ Internal tools and dashboards
+- ✅ Admin panels and management interfaces
+- ✅ Prototypes and proof-of-concept applications
+- ✅ Developer tools with web interfaces
+- ✅ API documentation pages (if interactive)
+- ✅ Configuration interfaces
+- ✅ Monitoring dashboards
+
+**If it runs in a browser, it MUST have Selenium tests.**
+
+This ensures:
+- Visual rendering works correctly across browsers
+- Interactive elements respond properly
+- Workflows complete successfully
+- Error handling works as expected
+- Responsive design functions properly
+
 ## 📋 Selenium Testing Requirements
 
 ### **Mandatory E2E Test Coverage**

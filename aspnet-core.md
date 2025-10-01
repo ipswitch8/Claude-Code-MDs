@@ -148,8 +148,8 @@ public class UserWorkflowTests : BaseE2ETest
         var passwordField = _driver.FindElement(By.Id("Password"));
         var loginButton = _driver.FindElement(By.CssSelector("button[type='submit']"));
 
-        emailField.SendKeys("test@example.com");
-        passwordField.SendKeys("TestPassword123!");
+        emailField.SendKeys(Environment.GetEnvironmentVariable("TEST_USER_EMAIL") ?? "test@example.com");
+        passwordField.SendKeys(Environment.GetEnvironmentVariable("TEST_USER_PASSWORD") ?? "TestPassword123!");
         loginButton.Click();
 
         // Verify dashboard loads
@@ -430,15 +430,14 @@ app.UseStaticFiles(new StaticFileOptions
 5. **[ ] Responsive design verified** - Mobile, tablet, desktop viewports tested
 6. **[ ] API endpoints tested** - REST endpoints validated through browser interaction
 
-### **Additional Steps for ASP.NET Core**
-After the universal 7-step protocol and mandatory E2E testing:
+### **After the universal 7-step protocol, add these framework-specific steps:**
 
-7. **[ ] Verify Entity Framework migrations** - Check if database schema is current
-8. **[ ] Test authentication flows** - Verify login/logout works correctly (E2E + unit tests)
-9. **[ ] Check static file serving** - Ensure CSS/JS files load with correct MIME types
-10. **[ ] Validate API endpoints** - Test REST endpoints return correct HTTP status codes
-11. **[ ] Review Serilog output** - Check application logs for errors or warnings
-12. **[ ] Run complete E2E test suite** - Full Selenium test coverage completed
+8. **[ ] Verify Entity Framework migrations** - Check if database schema is current
+9. **[ ] Test authentication flows** - Verify login/logout works correctly (E2E + unit tests)
+10. **[ ] Check static file serving** - Ensure CSS/JS files load with correct MIME types
+11. **[ ] Validate API endpoints** - Test REST endpoints return correct HTTP status codes
+12. **[ ] Review Serilog output** - Check application logs for errors or warnings
+13. **[ ] Run complete E2E test suite** - Full Selenium test coverage completed
 
 ### **Performance Testing**
 ```bash
@@ -496,24 +495,6 @@ dotnet restore
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your ASP.NET Core project's CLAUDE.md:
-
-```markdown
-# 📚 ASP.NET Core Documentation
-This project follows ASP.NET Core best practices.
-For detailed guidance, see: aspnet-core.md
-
-# Framework Version
-- Target Framework: netcoreapp3.1 (or current version)
-- Entity Framework Core: 3.1.x (or current version)
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-```
-
----
-
 *This document is specific to ASP.NET Core applications and should be used alongside universal patterns.*
+
+*This document covers ASP.NET Core development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

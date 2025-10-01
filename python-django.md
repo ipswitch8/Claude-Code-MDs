@@ -125,14 +125,13 @@ pip freeze > requirements.txt
 - Form changes
 - Most Python code changes in development
 
-### **Testing Protocol Additions**
-After the universal 7-step protocol, add:
+### **After the universal 7-step protocol, add these framework-specific steps:**
 
-7. **[ ] Check Django debug toolbar** - No SQL query issues or performance warnings
-8. **[ ] Verify migrations applied** - `python manage.py showmigrations` shows all applied
-9. **[ ] Test admin interface** - Admin panels load correctly for modified models
-10. **[ ] Check static files** - CSS/JS files served correctly
-11. **[ ] Validate forms and serializers** - All validation rules working
+8. **[ ] Check Django debug toolbar** - No SQL query issues or performance warnings
+9. **[ ] Verify migrations applied** - `python manage.py showmigrations` shows all applied
+10. **[ ] Test admin interface** - Admin panels load correctly for modified models
+11. **[ ] Check static files** - CSS/JS files served correctly
+12. **[ ] Validate forms and serializers** - All validation rules working
 
 ## 🗄️ Models and Database
 
@@ -381,7 +380,7 @@ class OrderModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             email='test@example.com',
-            password='testpass123',
+            password=os.environ.get('TEST_PASSWORD', 'testpass123'),
             first_name='Test',
             last_name='User'
         )
@@ -424,9 +423,10 @@ User = get_user_model()
 class OrderViewTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.test_password = os.environ.get('TEST_PASSWORD', 'testpass123')
         self.user = User.objects.create_user(
             email='test@example.com',
-            password='testpass123'
+            password=self.test_password
         )
         self.order = Order.objects.create(
             user=self.user,
@@ -434,7 +434,7 @@ class OrderViewTest(TestCase):
         )
 
     def test_order_list_view_authenticated(self):
-        self.client.login(email='test@example.com', password='testpass123')
+        self.client.login(email='test@example.com', password=self.test_password)
         response = self.client.get(reverse('orders:list'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Orders')
@@ -445,7 +445,7 @@ class OrderViewTest(TestCase):
         self.assertRedirects(response, '/accounts/login/?next=/orders/')
 
     def test_order_create_post(self):
-        self.client.login(email='test@example.com', password='testpass123')
+        self.client.login(email='test@example.com', password=self.test_password)
         response = self.client.post(reverse('orders:create'), {
             'total_amount': '150.00',
             'status': 'pending'
@@ -515,7 +515,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME', 'myproject'),
         'USER': os.environ.get('DB_USER', 'myuser'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'mypassword'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
@@ -657,25 +657,4 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your Django project's CLAUDE.md:
-
-```markdown
-# 📚 Django Documentation
-This project follows Django best practices.
-For detailed guidance, see: python-django.md
-
-# Framework Version
-- Python: ^3.11
-- Django: ^4.2
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database operations: database-operations.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document is specific to Python/Django applications and should be used alongside universal patterns.*
+*This document covers Python/Django development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

@@ -185,44 +185,190 @@ public class UserRegistrationModel
 }
 ```
 
-## 🔐 Secret Management
+## 🔐 Environment Variable Security (Consolidated Guidance)
 
-### **Environment Variables**
+### **CRITICAL RULE: Real Values vs Placeholders**
+
+**The `.env.example` vs `.env` Distinction:**
+
+- **`.env.example`** = Documentation template (placeholders are OK here)
+  - Purpose: Shows what variables are needed
+  - Contains: Placeholder text like `your_api_key_here`
+  - Committed to git: YES
+
+- **`.env`** = Runtime configuration (placeholders are NEVER OK)
+  - Purpose: Contains actual secrets for the application
+  - Contains: Real values ONLY
+  - Committed to git: NO (must be in .gitignore)
+
+### **Environment Variable Files**
+
+**`.env.example` (Documentation Template - Commit This):**
 ```bash
-# .env (NEVER commit this file)
-# Use strong, randomly generated values in production
-DATABASE_CONNECTION=${DATABASE_CONNECTION}
-JWT_SECRET=${JWT_SECRET}
-SMTP_PASSWORD=${SMTP_PASSWORD}
-API_KEY=${API_KEY}
+# =======================================================================
+# ENVIRONMENT CONFIGURATION TEMPLATE
+# =======================================================================
+# This file documents required environment variables
+# Placeholders shown here are for DOCUMENTATION ONLY
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file to .env
+# 2. Replace ALL placeholder values with real credentials
+# 3. Never use placeholder values in the actual .env file
+# =======================================================================
+
+# Database Configuration
+DATABASE_URL=postgresql://username:password@host:5432/database_name
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=your_database_name
+DATABASE_USER=your_database_user
+DATABASE_PASSWORD=your_database_password
+
+# Application Secrets (generate with: openssl rand -base64 32)
+JWT_SECRET=your_jwt_secret_here
+API_KEY=your_api_key_here
+SECRET_KEY=your_secret_key_here
+ENCRYPTION_KEY=your_encryption_key_here
+
+# SMTP Configuration
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_smtp_username
+SMTP_PASSWORD=your_smtp_password
+
+# Test Environment Variables (used in test suites)
+TEST_DATABASE_URL=postgresql://testuser:testpassword@localhost:5432/test_database
+TEST_API_KEY=test_api_key_here
+TEST_JWT_SECRET=test_jwt_secret_here
+
+# External API Keys
+STRIPE_API_KEY=your_stripe_api_key
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+
+# Application Configuration
+NODE_ENV=development
+ASPNETCORE_ENVIRONMENT=Development
+DEBUG=true
+LOG_LEVEL=info
+
+# =======================================================================
+# SECURITY NOTES:
+# - Generate secrets with: openssl rand -base64 32
+# - Use different values for dev/test/prod environments
+# - Never commit the actual .env file
+# - Rotate secrets periodically
+# =======================================================================
 ```
 
-### **Environment Variable Security Best Practices**
+**`.env` (Runtime Configuration - NEVER Commit):**
 ```bash
-# Generate secure random values for secrets
-# Example commands for generating secure values:
-# JWT_SECRET: openssl rand -base64 64
-# API keys: openssl rand -hex 32
-# Passwords: openssl rand -base64 32
+# PRODUCTION/DEVELOPMENT - REAL VALUES ONLY
+# Generated: 2025-01-16
+# Environment: Development
 
-# Example secure .env template
-DATABASE_CONNECTION="Server=${DB_HOST};Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};"
-JWT_SECRET="$(openssl rand -base64 64)"
-SMTP_PASSWORD="${SMTP_SERVICE_PASSWORD}"
-API_KEY="${EXTERNAL_API_KEY}"
-ENCRYPTION_KEY="$(openssl rand -base64 44)"
+# Database Configuration - REAL credentials
+DATABASE_URL=postgresql://myapp_user:Kx9$Lp3!Mn7#Qw2@db-prod.example.com:5432/myapp_production
+DATABASE_HOST=db-prod.example.com
+DATABASE_PORT=5432
+DATABASE_NAME=myapp_production
+DATABASE_USER=myapp_user
+DATABASE_PASSWORD=Kx9$Lp3!Mn7#Qw2
+
+# Application Secrets - REAL generated values
+JWT_SECRET=Zn8#Km3@Pb6!Vc2$Hx9&Ld7%Jt4*Nq5
+API_KEY=sk-prod-a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+SECRET_KEY=Rt6!Qw3#Mn8@Pb5$Vc2&Hx9%Ld3*Km7
+ENCRYPTION_KEY=Lp8!Nq3#Wr5$Bx2&Fv9%Km6*Jt4@Hx7
+
+# SMTP Configuration - REAL credentials
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASSWORD=SG.Kx9Lp3Mn7Qw2Vc5Hx8Ld4Jt6
+
+# Test Environment - REAL generated test values
+TEST_DATABASE_URL=postgresql://test_user:Wx5!Yr8#Pb3@localhost:5432/myapp_test
+TEST_API_KEY=test-Mx4$Np7!Kq2#Lw9
+TEST_JWT_SECRET=test-Bv6!Jx3#Mn8$Qp5
+
+# External APIs - REAL API keys (replace with actual values)
+STRIPE_API_KEY=your_stripe_api_key_here
+AWS_ACCESS_KEY_ID=your_aws_access_key_here
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key_here
+
+# Application Configuration
+NODE_ENV=production
+ASPNETCORE_ENVIRONMENT=Production
+DEBUG=false
+LOG_LEVEL=warning
 ```
 
+### **Generating Secure Values**
+
+```bash
+# Generate random secrets for production
+echo "JWT_SECRET=$(openssl rand -base64 32)"
+echo "API_KEY=$(openssl rand -hex 32)"
+echo "SECRET_KEY=$(openssl rand -base64 32)"
+echo "ENCRYPTION_KEY=$(openssl rand -base64 44)"
+
+# Generate test database credentials
+echo "TEST_DATABASE_URL=postgresql://test_user:$(openssl rand -base64 16)@localhost:5432/test_db"
+
+# Generate all secrets at once
+cat > .env.generated << 'EOF'
+# Auto-generated secrets - $(date)
+JWT_SECRET=$(openssl rand -base64 32)
+API_KEY=$(openssl rand -hex 32)
+SECRET_KEY=$(openssl rand -base64 32)
+ENCRYPTION_KEY=$(openssl rand -base64 44)
+TEST_JWT_SECRET=$(openssl rand -base64 32)
+TEST_DATABASE_PASSWORD=$(openssl rand -base64 16)
+EOF
+
+# Then review and add to your .env file
+```
+
+### **Environment Variable Usage in Code**
+
+**Production Code:**
 ```csharp
-// Configuration in Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // Load from environment variables
-    var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION")
-        ?? throw new InvalidOperationException("DATABASE_CONNECTION not found");
+// Load from environment - REQUIRED
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION")
+    ?? throw new InvalidOperationException("DATABASE_CONNECTION not found");
 
-    services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(connectionString));
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET")
+    ?? throw new InvalidOperationException("JWT_SECRET not found");
+```
+
+**Test Code - ALSO uses environment variables:**
+```csharp
+// Test configuration - uses TEST_* environment variables
+public class IntegrationTestBase
+{
+    protected string GetTestDatabaseUrl()
+    {
+        return Environment.GetEnvironmentVariable("TEST_DATABASE_URL")
+            ?? throw new InvalidOperationException("TEST_DATABASE_URL not configured");
+    }
+
+    protected string GetTestApiKey()
+    {
+        return Environment.GetEnvironmentVariable("TEST_API_KEY")
+            ?? throw new InvalidOperationException("TEST_API_KEY not configured");
+    }
+}
+
+// Usage in tests
+[Fact]
+public async Task TestDatabaseConnection()
+{
+    var testDbUrl = GetTestDatabaseUrl();
+    using var connection = new NpgsqlConnection(testDbUrl);
+    await connection.OpenAsync();
+    Assert.True(connection.State == ConnectionState.Open);
 }
 ```
 
@@ -925,29 +1071,6 @@ public class BruteForceDetectionService
     }
 }
 ```
-
----
-
-## 📚 Integration Instructions
-
-Add this to your project's CLAUDE.md:
-
-```markdown
-# 📚 Security Documentation
-This project follows security best practices.
-For detailed guidance, see: security-guidelines.md
-
-# Security Configuration
-- Authentication: JWT | Cookie | OAuth2
-- Authorization: Role-based | Policy-based
-- Data Protection: Encryption at rest and in transit
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Database security: database-operations.md
-```
-
----
 
 ## 🛡️ Additional Defensive Security Measures
 

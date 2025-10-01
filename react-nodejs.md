@@ -110,15 +110,14 @@ npm run build
 - Most JavaScript file changes
 - Asset additions
 
-### **Testing Protocol Additions**
-After the universal 7-step protocol and mandatory E2E testing:
+### **After the universal 7-step protocol, add these framework-specific steps:**
 
-7. **[ ] Check browser console** - No errors in DevTools console
-8. **[ ] Verify hot reload works** - Changes reflect without manual refresh
-9. **[ ] Test API endpoints** - Backend routes return correct responses
-10. **[ ] Check bundle size** - No unexpected increases in build output
-11. **[ ] Validate responsive design** - Test on different screen sizes (E2E + manual)
-12. **[ ] Run complete E2E test suite** - Full Selenium test coverage completed
+8. **[ ] Check browser console** - No errors in DevTools console
+9. **[ ] Verify hot reload works** - Changes reflect without manual refresh
+10. **[ ] Test API endpoints** - Backend routes return correct responses
+11. **[ ] Check bundle size** - No unexpected increases in build output
+12. **[ ] Validate responsive design** - Test on different screen sizes (E2E + manual)
+13. **[ ] Run complete E2E test suite** - Full Selenium test coverage completed
 
 ## ⚡ Performance Optimization
 
@@ -470,8 +469,8 @@ describe('User Workflow E2E Tests', () => {
       await page.navigateTo('/login');
 
       // Fill login form
-      await page.sendKeys(By.css('input[type="email"]'), 'test@example.com');
-      await page.sendKeys(By.css('input[type="password"]'), 'password123');
+      await page.sendKeys(By.css('input[type="email"]'), process.env.TEST_USER_EMAIL || 'test@example.com');
+      await page.sendKeys(By.css('input[type="password"]'), process.env.TEST_USER_PASSWORD || 'password123');
       await page.clickElement(By.css('button[type="submit"]'));
 
       // Verify dashboard loads
@@ -483,8 +482,8 @@ describe('User Workflow E2E Tests', () => {
     test('Invalid credentials show error message', async () => {
       await page.navigateTo('/login');
 
-      await page.sendKeys(By.css('input[type="email"]'), 'invalid@example.com');
-      await page.sendKeys(By.css('input[type="password"]'), 'wrongpassword');
+      await page.sendKeys(By.css('input[type="email"]'), process.env.TEST_INVALID_EMAIL || 'invalid@example.com');
+      await page.sendKeys(By.css('input[type="password"]'), process.env.TEST_INVALID_PASSWORD || 'wrongpassword');
       await page.clickElement(By.css('button[type="submit"]'));
 
       const errorMessage = await page.getText(By.css('.error-message'));
@@ -518,8 +517,8 @@ describe('User Workflow E2E Tests', () => {
     test('User can create new item', async () => {
       // Login first
       await page.navigateTo('/login');
-      await page.sendKeys(By.css('input[type="email"]'), 'test@example.com');
-      await page.sendKeys(By.css('input[type="password"]'), 'password123');
+      await page.sendKeys(By.css('input[type="email"]'), process.env.TEST_USER_EMAIL || 'test@example.com');
+      await page.sendKeys(By.css('input[type="password"]'), process.env.TEST_USER_PASSWORD || 'password123');
       await page.clickElement(By.css('button[type="submit"]'));
 
       // Navigate to create form
@@ -580,18 +579,21 @@ test('submits form with correct data', async () => {
   const mockSubmit = jest.fn();
   render(<LoginForm onSubmit={mockSubmit} />);
 
+  const testEmail = process.env.TEST_USER_EMAIL || 'user@example.com';
+  const testPassword = process.env.TEST_USER_PASSWORD || 'password123';
+
   fireEvent.change(screen.getByLabelText(/email/i), {
-    target: { value: 'user@example.com' }
+    target: { value: testEmail }
   });
   fireEvent.change(screen.getByLabelText(/password/i), {
-    target: { value: 'password123' }
+    target: { value: testPassword }
   });
 
   fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
   expect(mockSubmit).toHaveBeenCalledWith({
-    email: 'user@example.com',
-    password: 'password123'
+    email: testEmail,
+    password: testPassword
   });
 });
 ```
@@ -605,8 +607,8 @@ const app = require('../app');
 describe('POST /api/users', () => {
   test('creates a new user', async () => {
     const userData = {
-      email: 'test@example.com',
-      password: 'password123',
+      email: process.env.TEST_USER_EMAIL || 'test@example.com',
+      password: process.env.TEST_USER_PASSWORD || 'password123',
       name: 'Test User'
     };
 
@@ -622,7 +624,7 @@ describe('POST /api/users', () => {
   test('returns 400 for invalid email', async () => {
     const userData = {
       email: 'invalid-email',
-      password: 'password123'
+      password: process.env.TEST_USER_PASSWORD || 'password123'
     };
 
     await request(app)
@@ -779,25 +781,4 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your React/Node.js project's CLAUDE.md:
-
-```markdown
-# 📚 React/Node.js Documentation
-This project follows React/Node.js best practices.
-For detailed guidance, see: react-nodejs.md
-
-# Framework Versions
-- React: ^18.0.0 (or current version)
-- Node.js: ^16.0.0 (or current version)
-- Package Manager: npm | yarn | pnpm
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Performance optimization: performance-optimization.md
-```
-
----
-
-*This document is specific to React/Node.js applications and should be used alongside universal patterns.*
+*This document covers React/Node.js development best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*

@@ -376,13 +376,13 @@ prompt_password() {
 - Changes to external command dependencies
 
 ### **Testing Protocol for Bash Scripts**
-After the universal 7-step protocol, add:
+After the universal 7-step protocol, add these framework-specific steps:
 
-7. **[ ] Syntax validation** - Run `bash -n script.sh` to check syntax
-8. **[ ] Shellcheck analysis** - Run `shellcheck script.sh` for best practices
-9. **[ ] Test with different inputs** - Validate edge cases and error conditions
-10. **[ ] Check file permissions** - Ensure scripts are executable
-11. **[ ] Verify external dependencies** - Confirm all required commands are available
+8. **[ ] Syntax validation** - Run `bash -n script.sh` to check syntax
+9. **[ ] Shellcheck analysis** - Run `shellcheck script.sh` for best practices
+10. **[ ] Test with different inputs** - Validate edge cases and error conditions
+11. **[ ] Check file permissions** - Ensure scripts are executable
+12. **[ ] Verify external dependencies** - Confirm all required commands are available
 
 ### **Script Testing Framework**
 ```bash
@@ -610,10 +610,10 @@ set_env_defaults() {
 #!/bin/bash
 # Service management script
 
-SERVICE_NAME="myservice"
-PID_FILE="/var/run/${SERVICE_NAME}.pid"
-LOG_FILE="/var/log/${SERVICE_NAME}.log"
-DAEMON_USER="${SERVICE_NAME}"
+SERVICE_NAME="${SERVICE_NAME:-myservice}"
+PID_FILE="${PID_FILE:-/var/run/${SERVICE_NAME}.pid}"
+LOG_FILE="${LOG_FILE:-/var/log/${SERVICE_NAME}.log}"
+DAEMON_USER="${DAEMON_USER:-${SERVICE_NAME}}"
 
 # Check if service is running
 is_running() {
@@ -833,9 +833,9 @@ handle_secret() {
 #!/bin/bash
 # install.sh
 
-readonly INSTALL_DIR="/opt/myapp"
-readonly SERVICE_USER="myapp"
-readonly SERVICE_GROUP="myapp"
+readonly INSTALL_DIR="${INSTALL_DIR:-/opt/myapp}"
+readonly SERVICE_USER="${SERVICE_USER:-myapp}"
+readonly SERVICE_GROUP="${SERVICE_GROUP:-myapp}"
 
 # Installation functions
 create_user() {
@@ -901,25 +901,4 @@ main "$@"
 
 ---
 
-## 📚 Integration Instructions
-
-Add this to your Bash project's CLAUDE.md:
-
-```markdown
-# 📚 Bash Scripting Documentation
-This project follows Bash scripting best practices.
-For detailed guidance, see: bash-scripting.md
-
-# Script Information
-- Shell: /bin/bash
-- Minimum Bash Version: 4.0+
-- Dependencies: [list external commands]
-
-# Additional References
-- Universal patterns: universal-patterns.md
-- Security guidelines: security-guidelines.md
-```
-
----
-
-*This document covers Bash scripting best practices and should be used alongside universal patterns for robust script development.*
+*This document covers Bash scripting best practices and should be used alongside universal patterns. For consolidated security guidance including environment variables and secrets management, see security-guidelines.md.*
