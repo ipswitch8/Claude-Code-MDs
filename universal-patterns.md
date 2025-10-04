@@ -45,7 +45,7 @@ fi
 
 **THIS IS NON-NEGOTIABLE. NO EXCEPTIONS. EVER.**
 
-## 🚨 MANDATORY 8-STEP TESTING PROTOCOL
+## 🚨 MANDATORY 10-STEP TESTING PROTOCOL
 
 **For ANY changes to frontend code, views, or configuration:**
 
@@ -54,16 +54,41 @@ fi
 2. **[ ] Stop running application** - Show process kill command and confirmation
 3. **[ ] Build application** - Show build output with 0 errors
 4. **[ ] Restart application** - Show startup logs with "ready" confirmation
-5. **[ ] Test core functionality** - Show actual test commands and results
-6. **[ ] Verify assets load correctly** - Show HTTP 200 responses for new files
-7. **[ ] Document results** - Create timestamped test report with evidence (use testing-evidence-template.md)
+5. **[ ] 🚨 MANDATORY SELENIUM UI TESTING 🚨** - **ABSOLUTE BLOCKER FOR UI CHANGES**
+   - **Cannot mark UI testing complete without browser automation evidence**
+   - **Required Evidence Files:**
+     - `test_[FEATURE]_selenium.py` (actual test script)
+     - `[FEATURE]_selenium_results.txt` (execution output showing pass/fail)
+     - Browser screenshots (Chrome/Firefox)
+     - Console error logs (`console_errors_[FEATURE].txt` - **MUST show 0 errors**)
+   - **NO EVIDENCE = NO COMPLETION** (non-negotiable)
+6. **[ ] 🚨 MANDATORY CROSS-BROWSER TESTING 🚨** - **ABSOLUTE BLOCKER FOR UI CHANGES**
+   - **Required: Chrome AND Firefox automated testing**
+   - **Required: Mobile viewport testing** (minimum: 375px, 768px, 1920px)
+   - **Required: Comparative screenshots** showing consistency across browsers
+   - **Required: Browser compatibility verification** documented in evidence file
+7. **[ ] Verify assets load correctly** - Show HTTP 200 responses for new files
+8. **[ ] Verify database changes** - Show before/after SQL queries and actual values (if data modifications)
+9. **[ ] Document results** - Create timestamped test report with evidence (use testing-evidence-template.md)
 
-**❌ NEVER say "implementation complete" without ALL 8 steps verified with actual evidence.**
+**❌ NEVER say "implementation complete" without ALL 10 steps verified with actual evidence.**
+**❌ NO SELENIUM = NO UI COMPLETION = NO FEATURE SIGN-OFF**
 
 **📋 Supporting Documentation:**
 - Use `pre-testing-checklist.md` BEFORE starting step 0 to verify environment readiness
-- Use `testing-evidence-template.md` for step 7 to document all test results
-- Reference `selenium-e2e-testing.md` for comprehensive E2E testing requirements
+- Use `testing-evidence-template.md` for step 9 to document all test results
+- Reference `selenium-e2e-testing.md` for comprehensive E2E testing requirements (Steps 5-6)
+
+**🔥 UI Testing Evidence Requirements:**
+For ANY UI changes, you MUST create minimum 6 evidence files:
+1. `test_[FEATURE]_selenium.py` - The Selenium test script
+2. `[FEATURE]_selenium_results.txt` - Test execution output
+3. `screenshots/[FEATURE]_chrome_*.png` - Chrome browser screenshots
+4. `screenshots/[FEATURE]_firefox_*.png` - Firefox browser screenshots
+5. `console_errors_[FEATURE].txt` - Browser console logs (0 errors required)
+6. `[FEATURE]_test_evidence.md` - Completed testing-evidence-template.md
+
+**Without these 6+ files, the task is INCOMPLETE - no exceptions.**
 
 ## ⚠️ PROHIBITED VS REQUIRED STATEMENTS
 
@@ -77,17 +102,28 @@ fi
 - "Database probably updated correctly"
 - "Tests mostly pass"
 - "Just needs manual verification"
+- "UI testing completed" (without Selenium evidence)
+- "Visually inspected, looks good"
+- "Manual testing passed"
+- "Syntax checking confirms it works"
+- "Tested in one browser, should work in others"
+- "Console errors don't affect functionality"
+- "Selenium not needed for this simple change"
 
 **⚠️ These statements indicate shortcuts were taken and testing is incomplete.**
 
 ### **✅ ALWAYS SAY (Required - Demonstrates Complete Verification):**
-- "All 8 protocol steps completed with evidence documented in [filename]"
+- "All 10 protocol steps completed with evidence documented in [filename]"
 - "Selenium test completed successfully - clicked [specific UI elements], verified database changed from [X] to [Y]"
+- "test_expandable_tickets_selenium.py executed: 8/8 tests passed, screenshots saved to screenshots/, console errors: 0"
+- "Multi-browser testing complete: Chrome (v120) and Firefox (v121) both passed, mobile viewport (375px) verified"
+- "Evidence files created: test_pricing_selenium.py, pricing_selenium_results.txt, screenshots/pricing_chrome_1.png, screenshots/pricing_firefox_1.png, console_errors_pricing.txt, pricing_test_evidence.md"
 - "Authentication verified: logged in as [test user], accessed [protected resource], session persisted"
 - "Database verification complete: values changed from [before] to [after] as expected"
 - "End-to-end testing confirmed with screenshots at [location]"
 - "Tests executed: [X] passed, 0 failed, full evidence in testing-evidence-template.md"
 - "Regression testing passed: existing features [list] verified working"
+- "Console error log shows 0 errors across all browsers tested"
 
 **✅ These statements demonstrate thorough, evidence-based verification.**
 
@@ -200,12 +236,16 @@ TodoWrite must include:
 2. "Stop running application process (show PID killed)"
 3. "Build application and verify 0 errors"
 4. "Restart application successfully (show 'listening' confirmation)"
-5. "Execute [specific test type] tests"
-6. "Verify database changes [if data modifications expected]"
-7. "Verify authentication [if auth-related features]"
-8. "Check for breaking changes to existing features"
-9. "Document test results in testing-evidence-template.md"
-10. "Review and mark complete only with full evidence"
+5. "🚨 Execute Selenium UI tests - create test_[FEATURE]_selenium.py and verify browser automation"
+6. "🚨 Execute cross-browser testing - Chrome AND Firefox with screenshots"
+7. "🚨 Verify console errors: 0 errors required - create console_errors_[FEATURE].txt"
+8. "🚨 Test mobile viewports (375px, 768px, 1920px) with screenshots"
+9. "Verify database changes [if data modifications expected]"
+10. "Verify authentication [if auth-related features]"
+11. "Check for breaking changes to existing features"
+12. "Create all 6+ evidence files (test script, results, screenshots, console logs, evidence doc)"
+13. "Document test results in testing-evidence-template.md"
+14. "Review and mark complete only with full evidence"
 ```
 
 ### **TodoWrite State Management Rules:**
@@ -218,8 +258,12 @@ TodoWrite must include:
 - **"Stopped process"** → Must show PID and kill confirmation
 - **"Built application"** → Must show build output (0 errors)
 - **"Restarted application"** → Must show startup logs
-- **"Executed tests"** → Must show test output and results
+- **"Executed Selenium tests"** → Must show test_[FEATURE]_selenium.py file + execution results
+- **"Cross-browser testing"** → Must show screenshots from Chrome AND Firefox
+- **"Console errors check"** → Must show console_errors_[FEATURE].txt with 0 errors
+- **"Mobile viewport testing"** → Must show screenshots at 375px, 768px, 1920px
 - **"Verified database"** → Must show before/after SQL results
+- **"Created evidence files"** → Must list all 6+ file paths
 - **"Documented results"** → Must reference completed evidence file
 
 ### **Invalid Todo Patterns (Don't Do This):**

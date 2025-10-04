@@ -14,53 +14,90 @@
 
 ---
 
-## **✅ Testing Protocol Verification**
+## **✅ Testing Protocol Verification (10 Steps)**
 
-### **Step 0: Instruction Refresh**
+### **Step 0: Security Audit**
+- [ ] Executed ./security-audit.sh with 0 critical issues
+- **Evidence**: [Security audit output]
+
+### **Step 1: Instruction Refresh**
 - [ ] Read CLAUDE.md or project-specific instructions
 - [ ] Read relevant framework documentation (react-nodejs.md, python-django.md, etc.)
 - [ ] Read CRITICAL_INSTRUCTION_PRESERVATION.md
+- [ ] Read pre-testing-checklist.md
 - **Evidence**: [Confirmation of files reviewed]
 
-### **Step 1: Environment Preparation**
+### **Step 2: Environment Preparation**
 - [ ] Stopped all running processes (show process IDs killed)
 - [ ] Clean environment verified
 - **Command**: [Process kill commands used]
 - **Evidence**: [Process list before/after]
 
-### **Step 2: Build/Compile**
+### **Step 3: Build/Compile**
 - [ ] Clean build completed successfully
 - **Command**: [Build command used]
 - **Result**: [0 errors, X warnings - paste actual output]
 - **Evidence**: [Build output with timestamps]
 
-### **Step 3: Server/Application Restart**
+### **Step 4: Server/Application Restart**
 - [ ] Application started successfully
 - **Command**: [Startup command used]
 - **Result**: [Startup confirmation message]
 - **Evidence**: [Startup logs, listening ports, etc.]
 
-### **Step 4: Execute Core Tests**
-- [ ] Tests executed with actual interactions
-- **Actions Performed**: [List specific operations: clicked buttons, filled forms, etc.]
-- **Result**: [Success/Failure with details]
-- **Evidence**: [Test output, screenshots, console logs]
+### **Step 5: 🚨 MANDATORY SELENIUM UI TESTING 🚨**
+- [ ] **ABSOLUTE BLOCKER: Cannot mark complete without browser automation evidence**
+- [ ] test_[FEATURE]_selenium.py created with real browser automation code
+- [ ] [FEATURE]_selenium_results.txt shows test execution results
+- [ ] Chrome screenshots captured (minimum 3)
+- [ ] Firefox screenshots captured (minimum 3)
+- [ ] console_errors_[FEATURE].txt created with 0 SEVERE errors
+- **Test Script**: [File path to test_[FEATURE]_selenium.py]
+- **Results File**: [File path to [FEATURE]_selenium_results.txt]
+- **Test Count**: [X/Y tests passed]
+- **Execution Time**: [Seconds]
+- **Evidence**: [List all 6+ evidence files with paths]
 
-### **Step 5: Verify Results**
+**⚠️ NO EVIDENCE = NO COMPLETION - Non-negotiable**
+
+### **Step 6: 🚨 MANDATORY CROSS-BROWSER TESTING 🚨**
+- [ ] **ABSOLUTE BLOCKER: Cannot mark complete without multi-browser evidence**
+- [ ] Chrome automated testing completed (screenshots + console check)
+- [ ] Firefox automated testing completed (screenshots + console check)
+- [ ] Mobile viewport (375px) tested with screenshots
+- [ ] Tablet viewport (768px) tested with screenshots
+- [ ] Desktop viewport (1920px) tested with screenshots
+- [ ] Comparative screenshots show consistency across browsers
+- [ ] Browser compatibility verification documented
+- **Chrome Version**: [Version number]
+- **Firefox Version**: [Version number]
+- **Chrome Console Errors**: [Number - MUST BE 0]
+- **Firefox Console Errors**: [Number - MUST BE 0]
+- **Evidence**: [Screenshot files, console error logs]
+
+**⚠️ Console errors > 0 = TEST FAILED = TASK INCOMPLETE**
+
+### **Step 7: Verify Assets Load Correctly**
 - [ ] Expected outcomes verified
 - **URLs/Endpoints Tested**: [List with response codes]
 - **UI Elements Verified**: [List elements and states]
-- **Evidence**: [Screenshots, HTTP responses, console output]
+- **Static Assets**: [List assets with HTTP 200 responses]
+- **Evidence**: [HTTP responses, network tab screenshots]
 
-### **Step 6: Document Findings**
+### **Step 8: Verify Database Changes**
+- [ ] Database verification completed (if data modifications expected)
+- **Before State**: [SQL query and results]
+- **After State**: [SQL query and results]
+- **Values Changed**: ✅ YES / ❌ NO
+- **Evidence**: [See Database Verification section below]
+
+### **Step 9: Document Findings**
 - [ ] This evidence document completed
-- **Artifacts Created**: [List files created during testing]
-- **Evidence**: [Links to screenshots, logs, recordings]
+- [ ] All 6+ evidence files created and referenced
+- **Artifacts Created**: [List ALL files created during testing]
+- **Evidence**: [Links to screenshots, logs, recordings, test scripts]
 
-### **Step 7: Regression Verification**
-- [ ] Existing functionality unaffected
-- **Features Tested**: [List critical features verified still working]
-- **Evidence**: [Test results showing no regressions]
+**⚠️ Minimum 6 evidence files required for UI changes**
 
 ---
 
@@ -114,13 +151,53 @@
 
 ## **🎯 Specific Test Results**
 
-### **User Interface Testing**
+### **🚨 User Interface Testing (SELENIUM MANDATORY)**
+
+**⚠️ ABSOLUTE BLOCKER: UI changes require ALL 6+ evidence files**
+
+#### **Evidence File Checklist (NO EVIDENCE = NO COMPLETION)**
+- [ ] **test_[FEATURE]_selenium.py** - [File path or "NOT CREATED"]
+  - Lines of code: [Number]
+  - Test methods: [Number]
+  - Uses BasePage pattern: ✅ YES / ❌ NO
+  - Includes authentication: ✅ YES / ❌ NO
+
+- [ ] **[FEATURE]_selenium_results.txt** - [File path or "NOT CREATED"]
+  - Tests passed: [X/Y]
+  - Execution time: [Seconds]
+  - Timestamp: [When tests ran]
+
+- [ ] **screenshots/[FEATURE]_chrome_*.png** - [Number of screenshots]
+  - Before state: [Filename]
+  - Action state: [Filename]
+  - After state: [Filename]
+
+- [ ] **screenshots/[FEATURE]_firefox_*.png** - [Number of screenshots]
+  - Before state: [Filename]
+  - Action state: [Filename]
+  - After state: [Filename]
+
+- [ ] **console_errors_[FEATURE].txt** - [File path or "NOT CREATED"]
+  - SEVERE errors: [Number - MUST BE 0]
+  - Status: ✅ PASSED (0 errors) / ❌ FAILED (X errors)
+
+- [ ] **[FEATURE]_test_evidence.md** - [This file]
+
+**⚠️ If ANY checkbox is unchecked, task is INCOMPLETE**
+
+#### **Selenium Test Execution Results**
 - **Page Loading**: ✅ SUCCESS / ❌ FAILED - [Details]
 - **Element Visibility**: ✅ SUCCESS / ❌ FAILED - [Details]
-- **Button Clicks**: ✅ SUCCESS / ❌ FAILED - [Details]
-- **Form Submissions**: ✅ SUCCESS / ❌ FAILED - [Details]
-- **Validation Messages**: ✅ SUCCESS / ❌ FAILED - [Details]
-- **Responsive Design**: ✅ SUCCESS / ❌ FAILED - [Details]
+- **Button Clicks**: ✅ SUCCESS / ❌ FAILED - [Specific buttons clicked]
+- **Form Submissions**: ✅ SUCCESS / ❌ FAILED - [Forms tested]
+- **Validation Messages**: ✅ SUCCESS / ❌ FAILED - [Messages verified]
+- **Responsive Design**: ✅ SUCCESS / ❌ FAILED - [Viewports tested: 375px, 768px, 1920px]
+
+#### **Console Error Verification (MANDATORY)**
+- **Chrome Console Errors**: [Number - MUST BE 0]
+- **Firefox Console Errors**: [Number - MUST BE 0]
+- **Evidence File**: console_errors_[FEATURE].txt
+- **Status**: ✅ 0 ERRORS / ❌ ERRORS FOUND (BLOCKER)
 
 ### **API/Backend Testing**
 - **Endpoint Accessibility**: ✅ SUCCESS / ❌ FAILED - [Details]
@@ -128,11 +205,40 @@
 - **Data Validation**: ✅ SUCCESS / ❌ FAILED - [Details]
 - **Error Handling**: ✅ SUCCESS / ❌ FAILED - [Details]
 
-### **Cross-Browser Testing** (if applicable)
-- **Chrome**: ✅ PASS / ❌ FAIL - [Version tested]
-- **Firefox**: ✅ PASS / ❌ FAIL - [Version tested]
-- **Edge**: ✅ PASS / ❌ FAIL - [Version tested]
-- **Safari**: ✅ PASS / ❌ FAIL - [Version tested]
+### **🚨 Cross-Browser Testing (MANDATORY FOR UI CHANGES)**
+**⚠️ ABSOLUTE BLOCKER: UI changes require Chrome AND Firefox automated testing**
+
+- **Chrome**: ✅ PASS / ❌ FAIL
+  - Version tested: [Version number]
+  - Screenshots: [List screenshot filenames]
+  - Console errors: [Number - MUST BE 0]
+  - Test execution time: [Seconds]
+
+- **Firefox**: ✅ PASS / ❌ FAIL
+  - Version tested: [Version number]
+  - Screenshots: [List screenshot filenames]
+  - Console errors: [Number - MUST BE 0]
+  - Test execution time: [Seconds]
+
+- **Edge**: ✅ PASS / ❌ FAIL / ⚠️ OPTIONAL - [Version tested]
+- **Safari**: ✅ PASS / ❌ FAIL / ⚠️ OPTIONAL - [Version tested]
+
+#### **Mobile/Responsive Testing (MANDATORY)**
+- **Mobile (375px)**: ✅ PASS / ❌ FAIL
+  - Screenshots: [Filenames]
+  - Elements visible: ✅ YES / ❌ NO
+  - Functionality works: ✅ YES / ❌ NO
+
+- **Tablet (768px)**: ✅ PASS / ❌ FAIL
+  - Screenshots: [Filenames]
+  - Layout correct: ✅ YES / ❌ NO
+
+- **Desktop (1920px)**: ✅ PASS / ❌ FAIL
+  - Screenshots: [Filenames]
+  - All features accessible: ✅ YES / ❌ NO
+
+**⚠️ If Chrome or Firefox FAILED, task is INCOMPLETE**
+**⚠️ If any console errors > 0, task is INCOMPLETE**
 
 ---
 
@@ -181,13 +287,26 @@
 ### **Overall Test Result**: ✅ PASS / ❌ FAIL
 
 ### **Pass Criteria Met**:
-- [ ] All protocol steps completed with evidence
+- [ ] All 10 protocol steps completed with evidence
+- [ ] 🚨 Selenium UI testing completed with 6+ evidence files (if UI changes)
+- [ ] 🚨 Cross-browser testing completed (Chrome + Firefox) (if UI changes)
+- [ ] 🚨 Console errors = 0 across all browsers (if UI changes)
 - [ ] Database changes verified (if applicable)
 - [ ] UI interactions successful
 - [ ] Authentication working (if applicable)
 - [ ] No critical issues blocking functionality
 - [ ] Existing features not broken (regression check)
 - [ ] All evidence artifacts collected
+
+**⚠️ For UI Changes - MUST HAVE:**
+- ✅ test_[FEATURE]_selenium.py file created
+- ✅ [FEATURE]_selenium_results.txt file created
+- ✅ screenshots/[FEATURE]_chrome_*.png files (minimum 3)
+- ✅ screenshots/[FEATURE]_firefox_*.png files (minimum 3)
+- ✅ console_errors_[FEATURE].txt file (showing 0 errors)
+- ✅ This evidence document completed
+
+**Without these 6 files, UI testing is INCOMPLETE**
 
 ### **Failure Analysis** (if test failed):
 - **Primary Failure Point**: [Where the test failed]
@@ -212,13 +331,23 @@
 - "Implementation complete" (without evidence)
 - "Probably works" or "Should work"
 - "Bypassing authentication for testing purposes"
+- "UI testing completed" (without Selenium evidence)
+- "Visually inspected, looks good"
+- "Manual testing passed"
+- "Tested in one browser, should work in others"
+- "Console errors don't affect functionality"
+- "Selenium not needed for this simple change"
 
 ### **✅ ALWAYS SAY (Required):**
+- "All 10 protocol steps completed with evidence documented in [filename]"
 - "Selenium test completed successfully - clicked [specific elements], verified database changed from [X] to [Y]"
-- "All 7 protocol steps completed with evidence"
+- "test_expandable_tickets_selenium.py executed: 8/8 tests passed, screenshots saved to screenshots/, console errors: 0"
+- "Multi-browser testing complete: Chrome (v120) and Firefox (v121) both passed, mobile viewport (375px) verified"
+- "Evidence files created: test_pricing_selenium.py, pricing_selenium_results.txt, screenshots/pricing_chrome_1.png, screenshots/pricing_firefox_1.png, console_errors_pricing.txt, pricing_test_evidence.md"
 - "End-to-end verification confirmed with screenshots"
 - "Database values verified: changed from [before] to [after]"
 - "Authentication successful: logged in as [user], accessed [protected resource]"
+- "Console error log shows 0 errors across all browsers tested"
 
 ---
 
@@ -235,6 +364,9 @@
 
 Tasks cannot be marked "complete" unless this template shows **PASS** with:
 - Full evidence for all applicable sections
+- **🚨 FOR UI CHANGES: All 6+ Selenium evidence files created (NO EXCEPTIONS)**
+- **🚨 FOR UI CHANGES: Console errors = 0 (NO EXCEPTIONS)**
+- **🚨 FOR UI CHANGES: Chrome AND Firefox testing completed (NO EXCEPTIONS)**
 - Database verification (if data changes expected)
 - Authentication verification (if auth required)
 - No blocker issues
@@ -243,6 +375,12 @@ Tasks cannot be marked "complete" unless this template shows **PASS** with:
 **If authentication fails → Test failed → Task incomplete (NO EXCEPTIONS)**
 
 **If database unchanged when changes expected → Test failed → Task incomplete (NO EXCEPTIONS)**
+
+**If UI changes without Selenium evidence → Test incomplete → Task incomplete (NO EXCEPTIONS)**
+
+**If console errors > 0 → Test failed → Task incomplete (NO EXCEPTIONS)**
+
+**NO SELENIUM = NO UI COMPLETION = NO FEATURE SIGN-OFF**
 
 ---
 

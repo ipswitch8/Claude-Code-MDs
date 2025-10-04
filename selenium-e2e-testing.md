@@ -27,6 +27,88 @@ This ensures:
 - Error handling works as expected
 - Responsive design functions properly
 
+## 🚨 EVIDENCE REQUIREMENTS (NO EVIDENCE = NO COMPLETION)
+
+**ABSOLUTE BLOCKER: Cannot mark UI testing complete without ALL evidence files.**
+
+### **Mandatory Evidence Files (Minimum 6 Required)**
+
+For EVERY UI feature or change, you MUST create and provide:
+
+1. **`test_[FEATURE]_selenium.py`** - The actual Selenium test script
+   - Must contain real browser automation code
+   - Must interact with actual UI elements (clicks, form fills, navigation)
+   - Must include assertions that verify expected behavior
+   - Must NOT be mock code or placeholder code
+
+2. **`[FEATURE]_selenium_results.txt`** - Test execution output
+   - Must show actual execution results (passed/failed tests)
+   - Must include test counts (e.g., "8/8 tests passed")
+   - Must include timestamps showing when tests ran
+   - Must include any error messages if tests failed
+
+3. **`screenshots/[FEATURE]_chrome_*.png`** - Chrome browser screenshots
+   - Must show actual application pages during test execution
+   - Must capture key states (before action, after action, success states)
+   - Minimum 3 screenshots per feature
+   - Must be actual screenshots, not descriptions
+
+4. **`screenshots/[FEATURE]_firefox_*.png`** - Firefox browser screenshots
+   - Same requirements as Chrome screenshots
+   - Must demonstrate cross-browser consistency
+   - Must show same test scenarios as Chrome
+
+5. **`console_errors_[FEATURE].txt`** - Browser console logs
+   - **MUST show 0 SEVERE errors** (non-negotiable)
+   - Must include full console output from browser
+   - Must be captured during actual test execution
+   - Format: "✅ PASSED: 0 console errors" or "❌ FAILED: X console errors found"
+
+6. **`[FEATURE]_test_evidence.md`** - Completed testing-evidence-template.md
+   - Must document all 10 testing protocol steps
+   - Must reference all other evidence files
+   - Must include database verification (if applicable)
+   - Must include authentication verification (if applicable)
+
+### **Enforcement Rules**
+
+- ✅ **With 6+ evidence files** → Task can be marked complete
+- ❌ **Without evidence files** → Task INCOMPLETE - no exceptions
+- ❌ **With placeholder/mock evidence** → Task INCOMPLETE - must redo with real evidence
+- ❌ **With evidence from only 1 browser** → Task INCOMPLETE - need Chrome AND Firefox
+- ❌ **With console errors present** → Task FAILED - must fix errors and retest
+
+### **Before/After Comparison for Evidence Validation**
+
+**❌ INVALID (No Evidence):**
+```
+"UI testing completed successfully"
+"Selenium tests pass"
+"Tested and verified working"
+```
+
+**✅ VALID (With Evidence):**
+```
+"Selenium testing complete:
+- test_pricing_update_selenium.py created (127 lines, 8 test methods)
+- pricing_selenium_results.txt: 8/8 tests passed in 45.3 seconds
+- screenshots/pricing_chrome_before.png, screenshots/pricing_chrome_after.png (Chrome v120)
+- screenshots/pricing_firefox_before.png, screenshots/pricing_firefox_after.png (Firefox v121)
+- console_errors_pricing.txt: 0 SEVERE errors
+- pricing_test_evidence.md: All 10 protocol steps documented
+Total: 10 evidence files created"
+```
+
+### **Template Compliance Verification**
+
+Each evidence file must use the templates provided in this document:
+- Selenium test scripts → Use BasePage pattern (lines 286-345)
+- Console error checking → Use check_console_errors() template (see section below)
+- Multi-browser testing → Use browser matrix configuration (lines 456-490)
+- Evidence documentation → Use testing-evidence-template.md
+
+**Failure to use templates = Evidence invalid = Task incomplete**
+
 ## 📋 Selenium Testing Requirements
 
 ### **Mandatory E2E Test Coverage**
@@ -342,6 +424,206 @@ class BasePage:
         """Scroll element into view"""
         element = self.wait_for_element(locator)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
+    def check_console_errors(self, feature_name):
+        """
+        🚨 MANDATORY: Check browser console for errors
+
+        This method MUST be called in every UI test to verify 0 console errors.
+        Creates console_errors_[FEATURE].txt evidence file.
+
+        Args:
+            feature_name: Name of the feature being tested (for filename)
+
+        Raises:
+            AssertionError: If any SEVERE console errors are found
+
+        Returns:
+            int: Number of severe errors found (should always be 0)
+        """
+        import os
+
+        # Get browser console logs
+        logs = self.driver.get_log('browser')
+
+        # Filter for SEVERE errors (warnings are acceptable in some cases)
+        severe_errors = [log for log in logs if log['level'] == 'SEVERE']
+
+        # Create evidence file
+        evidence_dir = 'evidence'
+        os.makedirs(evidence_dir, exist_ok=True)
+        evidence_file = os.path.join(evidence_dir, f'console_errors_{feature_name}.txt')
+
+        with open(evidence_file, 'w', encoding='utf-8') as f:
+            f.write(f"Browser Console Error Check - {feature_name}\n")
+            f.write(f"{'=' * 60}\n\n")
+            f.write(f"Test Timestamp: {self._get_timestamp()}\n")
+            f.write(f"Browser: {self.driver.capabilities.get('browserName', 'unknown')}\n")
+            f.write(f"Total Log Entries: {len(logs)}\n")
+            f.write(f"SEVERE Errors: {len(severe_errors)}\n\n")
+
+            if severe_errors:
+                f.write("❌ FAILED: Console errors detected\n\n")
+                f.write("SEVERE Errors:\n")
+                f.write("-" * 60 + "\n")
+                for idx, error in enumerate(severe_errors, 1):
+                    f.write(f"\nError #{idx}:\n")
+                    f.write(f"  Level: {error['level']}\n")
+                    f.write(f"  Message: {error['message']}\n")
+                    f.write(f"  Source: {error.get('source', 'unknown')}\n")
+                    f.write(f"  Timestamp: {error['timestamp']}\n")
+
+                # FAIL THE TEST
+                self.logger.error(f"Console errors detected: {len(severe_errors)}")
+                raise AssertionError(
+                    f"❌ FAILED: {len(severe_errors)} SEVERE console errors found. "
+                    f"See {evidence_file} for details."
+                )
+            else:
+                f.write("✅ PASSED: 0 SEVERE console errors\n\n")
+                f.write("All log entries:\n")
+                f.write("-" * 60 + "\n")
+                for log in logs:
+                    f.write(f"[{log['level']}] {log['message']}\n")
+
+        self.logger.info(f"Console error check complete: {evidence_file}")
+        return len(severe_errors)
+
+    def _get_timestamp(self):
+        """Get current timestamp for evidence files"""
+        from datetime import datetime
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+```
+
+### **Complete E2E Test Example with Evidence Collection**
+
+```python
+# tests/e2e/test_pricing_update_feature.py
+import unittest
+import os
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
+from pages.login_page import LoginPage
+from pages.pricing_page import PricingPage
+import pyodbc
+
+class TestPricingUpdateFeature(unittest.TestCase):
+    """
+    Complete E2E test with all evidence collection requirements
+    Demonstrates proper authentication, database verification, and evidence creation
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up test environment"""
+        cls.driver = webdriver.Chrome()
+        cls.driver.maximize_window()
+        cls.base_url = os.getenv('TEST_BASE_URL', 'http://localhost:5000')
+        cls.feature_name = 'pricing_update'
+
+        # Create evidence directories
+        os.makedirs('screenshots', exist_ok=True)
+        os.makedirs('evidence', exist_ok=True)
+
+    def test_01_pricing_update_workflow(self):
+        """Test complete pricing update workflow with database verification"""
+
+        # STEP 1: AUTHENTICATION (MANDATORY - NO BYPASS)
+        login_page = LoginPage(self.driver)
+        login_page.navigate_to_login()
+        login_page.login(
+            os.getenv('TEST_USER_EMAIL'),
+            os.getenv('TEST_USER_PASSWORD')
+        )
+
+        # Verify authentication successful
+        self.assertIn('/dashboard', self.driver.current_url)
+        self.driver.save_screenshot('screenshots/pricing_chrome_01_authenticated.png')
+
+        # STEP 2: DATABASE VERIFICATION - BEFORE
+        invoice_id = 12345
+        part_number = 'ABC123'
+
+        before_price = self._query_database(
+            f"SELECT UnitCost FROM InvoiceItems WHERE InvoiceId={invoice_id} AND PartNumber='{part_number}'"
+        )
+        self.assertIsNotNone(before_price, "Test data must exist")
+        print(f"BEFORE: UnitCost = {before_price}")
+
+        # STEP 3: NAVIGATE TO PRICING PAGE
+        pricing_page = PricingPage(self.driver)
+        pricing_page.navigate_to_invoice(invoice_id)
+        self.driver.save_screenshot('screenshots/pricing_chrome_02_invoice_loaded.png')
+
+        # STEP 4: EXECUTE UI ACTIONS
+        pricing_page.click_part_row(part_number)
+        pricing_page.update_unit_cost(12.75)
+        pricing_page.click_save_button()
+
+        # Wait for success confirmation
+        success_msg = pricing_page.wait_for_success_message()
+        self.assertIn('updated', success_msg.lower())
+        self.driver.save_screenshot('screenshots/pricing_chrome_03_update_success.png')
+
+        # STEP 5: DATABASE VERIFICATION - AFTER
+        after_price = self._query_database(
+            f"SELECT UnitCost FROM InvoiceItems WHERE InvoiceId={invoice_id} AND PartNumber='{part_number}'"
+        )
+        print(f"AFTER: UnitCost = {after_price}")
+
+        # CRITICAL VERIFICATION
+        self.assertEqual(after_price, 12.75,
+            "❌ FAILED: Database not updated - UI shows success but backend did not change")
+
+        # STEP 6: CONSOLE ERROR CHECK (MANDATORY)
+        base_page = BasePage(self.driver)
+        errors = base_page.check_console_errors(self.feature_name)
+        self.assertEqual(errors, 0, "Console errors detected")
+
+        # STEP 7: DOCUMENT EVIDENCE
+        self._write_test_results({
+            'invoice_id': invoice_id,
+            'part_number': part_number,
+            'before_price': before_price,
+            'after_price': after_price,
+            'expected_price': 12.75,
+            'database_updated': after_price == 12.75,
+            'console_errors': errors
+        })
+
+    def _query_database(self, sql):
+        """Execute SQL query and return result"""
+        conn_string = os.getenv('TEST_DATABASE_URL')
+        with pyodbc.connect(conn_string) as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            return result[0] if result else None
+
+    def _write_test_results(self, results):
+        """Write test results to evidence file"""
+        with open(f'evidence/{self.feature_name}_selenium_results.txt', 'w') as f:
+            f.write(f"Selenium Test Results - {self.feature_name}\n")
+            f.write("=" * 60 + "\n\n")
+            f.write(f"Test: test_01_pricing_update_workflow\n")
+            f.write(f"Status: ✅ PASSED\n\n")
+            f.write("Database Verification:\n")
+            f.write(f"  Invoice ID: {results['invoice_id']}\n")
+            f.write(f"  Part Number: {results['part_number']}\n")
+            f.write(f"  Before: ${results['before_price']}\n")
+            f.write(f"  After: ${results['after_price']}\n")
+            f.write(f"  Expected: ${results['expected_price']}\n")
+            f.write(f"  Database Updated: {'✅ YES' if results['database_updated'] else '❌ NO'}\n\n")
+            f.write(f"Console Errors: {results['console_errors']}\n")
+
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up"""
+        cls.driver.quit()
+
+if __name__ == '__main__':
+    unittest.main()
 ```
 
 ### **Driver Factory**
